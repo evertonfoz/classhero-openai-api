@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de Perguntas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="menu-collapsed">
+  <header class="header">
+    <div class="header-left">
+      <button id="menuToggle" class="hamburger" aria-label="Abrir menu">☰</button>
+      <img src="logo.png" alt="Logo" class="logo" />
+      <h1>Gerador de Perguntas com IA</h1>
+    </div>
+    <button id="toggleTheme" aria-label="Alternar tema" class="toggle-theme">🌙</button>
+  </header>
+
+  <main class="main-wrapper">
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <button id="uploadMenu" aria-label="Upload de Arquivo">
+            <span class="icon">📤</span>
+            <span class="label">Upload Base de Conhecimento</span>
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <section id="uploadSection">
+        <h1>Envio de Arquivo(s) PDF</h1>
+        <br />
+        <form id="uploadForm">
+          <label for="fileInput">Selecione ou arraste os arquivos PDF:</label>
+          <div id="dropArea">
+            <input type="file" id="fileInput" accept="application/pdf" multiple required />
+            <p>Arraste e solte aqui ou clique para escolher</p>
+          </div>
+          <br />
+          <button type="submit">Enviar</button>
+          <progress id="uploadProgress" max="100" value="0" style="display: none; width: 100%;"></progress>
+        </form>
+        <div id="statusMessage" class="alert"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
