@@ -62,9 +62,9 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
     dropArea.style.backgroundColor = "#fdfdfd";
   });
   
-  document.getElementById("menuToggle").addEventListener("click", () => {
-    document.body.classList.toggle("menu-collapsed");
-  });
+  // document.getElementById("menuToggle").addEventListener("click", () => {
+  //   document.body.classList.toggle("menu-collapsed");
+  // });
   
   const toggleTheme = document.getElementById("toggleTheme");
   
@@ -81,4 +81,14 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
       toggleTheme.textContent = "☀️";
     }
   });
+
+  document.getElementById("menuToggle").addEventListener("click", () => {
+    document.body.classList.toggle("menu-collapsed");
+  
+    const menuIcon = document.getElementById("menuIcon");
+    const isCollapsed = document.body.classList.contains("menu-collapsed");
+  
+    menuIcon.textContent = isCollapsed ? "📂" : "📁"; // 📂 aberta, 📁 fechada
+  });
+  
   
