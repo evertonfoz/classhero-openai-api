@@ -91,4 +91,21 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
     menuIcon.textContent = isCollapsed ? "📂" : "📁"; // 📂 aberta, 📁 fechada
   });
   
-  
+  // === Logo aleatória na inicialização ===
+const maxLogoIndex = 1; // Você pode aumentar esse valor conforme adiciona novas logos
+const randomIndex = Math.floor(Math.random() * maxLogoIndex) + 1;
+const formattedIndex = String(randomIndex).padStart(3, '0');
+const logoPath = `images/logos/logo_${formattedIndex}.png`;
+
+const contentSection = document.querySelector(".content");
+if (contentSection) {
+  contentSection.innerHTML = `<img src="${logoPath}" alt="Logo Aleatória ClassHero" class="logo-img" />`;
+}
+
+// === Alternar para tela de upload ao clicar no menu ===
+const uploadMenu = document.getElementById("uploadMenu");
+uploadMenu.addEventListener("click", () => {
+  document.querySelector(".content").innerHTML = ""; // Limpa o conteúdo da logo
+  document.querySelector(".content").appendChild(document.getElementById("uploadSection"));
+  document.getElementById("uploadSection").style.display = "flex";
+});
