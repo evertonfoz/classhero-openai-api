@@ -1,0 +1,17 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #2c3e50;
+    --primary-color: #27ae60;
+  }
+  
+  body.dark {
+    --bg-color: #121212;
+    --text-color: #f0f0f0;
+    --primary-color: #2ecc71;
+  }
+  
+  body, html {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
