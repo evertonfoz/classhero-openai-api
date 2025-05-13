@@ -1,6 +1,3 @@
----
-
-````markdown
 # 📘 Gerador de Perguntas com IA
 
 Este é um projeto web moderno e responsivo que permite o **upload de arquivos PDF** e gera automaticamente **perguntas com IA** com base no conteúdo enviado.
@@ -92,9 +89,3 @@ Desenvolvido com fins educacionais por **\[Seu Nome]**, professor e pesquisador 
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
 
-```
-
----
-
-Se quiser, posso gerar o arquivo `.md` com o nome e detalhes do seu perfil. Deseja que personalize com seu nome e GitHub real?
-```
