@@ -1,14 +1,34 @@
-import { renderRandomLogo } from "../../shared/random_logo.js";
+// login.js
+import { renderRandomLogo } from "../../shared/js/random_logo.js";
 
 renderRandomLogo();
 
 const loginForm = document.getElementById("loginForm");
 const verifyForm = document.getElementById("verifyForm");
 const statusMessage = document.getElementById("statusMessage");
+const emailInput = document.getElementById("emailInput");
+const codeInput = document.getElementById("codeInput");
+const loginButton = loginForm.querySelector("button[type='submit']");
 
+// Desabilita botão por padrão
+loginButton.disabled = true;
+
+// Valida formato de e-mail
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+// Observa alterações no campo de e-mail
+emailInput.addEventListener("input", () => {
+  const isValid = isValidEmail(emailInput.value.trim());
+  loginButton.disabled = !isValid;
+});
+
+// Envia código de verificação
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const email = document.getElementById("emailInput").value;
+  const email = emailInput.value.trim();
   statusMessage.textContent = "Enviando código...";
 
   try {
@@ -22,8 +42,8 @@ loginForm.addEventListener("submit", async (e) => {
 
     if (response.ok) {
       statusMessage.textContent = "Código enviado! Verifique seu e-mail.";
-      loginForm.style.display = "none";
-      verifyForm.style.display = "block";
+      loginForm.classList.add("hidden");
+      verifyForm.classList.remove("hidden");
     } else {
       statusMessage.textContent = result?.error || "Erro ao enviar código.";
     }
@@ -32,10 +52,11 @@ loginForm.addEventListener("submit", async (e) => {
   }
 });
 
+// Verifica código informado
 verifyForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const email = document.getElementById("emailInput").value;
-  const code = document.getElementById("codeInput").value;
+  const email = emailInput.value.trim();
+  const code = codeInput.value.trim();
   statusMessage.textContent = "Verificando...";
 
   try {

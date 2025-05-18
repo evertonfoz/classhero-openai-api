@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  frontend:
+    container_name: classhero-frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+
+  backend:
+    container_name: classhero-backend
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    working_dir: /workspace/backend
+    volumes:
+      - ./backend:/workspace/backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+    command: sleep infinity  # 👈 Evita crash antes do nodemon estar disponível
