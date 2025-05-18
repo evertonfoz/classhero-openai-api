@@ -12,7 +12,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes); // 👈 registra as rotas
 
 app.get('/', (req, res) => {
-  res.send('🚀 Backend funcionando!!');
+  res.send('🚀 Backend funcionando!');
 });
 
 const PORT = process.env.PORT || 3000;

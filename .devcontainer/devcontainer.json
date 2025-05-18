@@ -7,10 +7,10 @@
   "workspaceFolder": "/workspace",
   "overrideCommand": false,
   "runServices": ["backend", "frontend"],
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "updateContentCommand": "true",
-  "postCreateCommand": "cd backend && npm install --unsafe-perm && npm install --save-dev nodemon --unsafe-perm && npm install @supabase/supabase-js",
-  "postStartCommand": "cd backend && npx nodemon src/index.js",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "npm install --prefix ./backend --unsafe-perm && npm install --prefix ./frontend --unsafe-perm",
+  "postStartCommand": "sh -c 'cd backend && npm run dev & cd frontend && npm run dev'",
   "customizations": {
     "vscode": {
       "settings": {

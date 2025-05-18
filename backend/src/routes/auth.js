@@ -12,6 +12,7 @@ router.post('/send-code', async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   await supabase.from('otps').delete().eq('email', email);
+  
   const { error } = await supabase
     .from('otps')
     .insert({ email, code: otp, expires_at: new Date(Date.now() + 10 * 60000) });

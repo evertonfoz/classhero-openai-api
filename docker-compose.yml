@@ -19,6 +19,7 @@ services:
     working_dir: /workspace/backend
     volumes:
       - ./backend:/workspace/backend
+      - ./frontend:/workspace/frontend
     ports:
       - "3000:3000"
     env_file:
