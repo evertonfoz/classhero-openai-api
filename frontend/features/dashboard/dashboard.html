@@ -4,56 +4,119 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClassHero</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="./dashboard.js" type="module"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', // ESSENCIAL!
+      theme: {
+        extend: {
+          colors: {
+            primary: '#27ae60',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body.menu-collapsed .sidebar {
+      width: 60px;
+    }
+
+    body.menu-collapsed .main-content {
+      margin-left: 60px;
+    }
+
+    body.menu-collapsed .sidebar .label {
+      display: none;
+    }
+  </style>
 </head>
 
 <body class="menu-collapsed">
-  <!-- Botões superiores -->
-  <div class="top-buttons">
-    <button id="menuToggle" class="menu-toggle" aria-label="Alternar sidebar">
+  <!-- Botão de colapso do menu -->
+  <div class="fixed top-4 left-4 z-50">
+    <button id="menuToggle" class="text-2xl bg-transparent border-none cursor-pointer">
       <span id="menuIcon">📂</span>
     </button>
   </div>
 
-  <button id="toggleTheme" class="toggle-theme" aria-label="Alternar tema">🌙</button>
+  <!-- Botão de alternância de tema -->
+  <button id="toggleTheme"
+    class="fixed top-4 right-4 text-2xl bg-transparent border-none cursor-pointer z-50">
+    🌙
+  </button>
 
   <!-- Sidebar -->
-  <aside class="sidebar">
-    <ul>
+  <aside class="sidebar fixed top-0 left-0 h-screen w-[200px] bg-gray-800 text-white flex flex-col items-center pt-16 transition-all duration-300 shadow-lg z-10">
+    <ul class="space-y-6">
       <li>
-        <button id="uploadMenu" aria-label="Upload de Arquivo">
-          <span class="icon">📤</span>
-          <span class="label">Upload Base de Conhecimento</span>
+        <button class="text-white text-lg font-semibold hover:text-primary transition-colors flex flex-col items-center">
+          <span class="icon text-2xl">📤</span>
+          <span class="label text-sm mt-1">Upload</span>
         </button>
       </li>
     </ul>
   </aside>
 
   <!-- Conteúdo principal -->
-  <main class="main-wrapper">
-    <section class="content">
-      <!-- A logo aleatória será injetada aqui via JS -->
-    </section>
+  <main id="mascoteContainer" class="main-content ml-[200px] min-h-screen flex items-center justify-center transition-all duration-300 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+
+    <!-- Mascote será inserida aqui -->
   </main>
 
-  <!-- Seção de upload (oculta inicialmente e movida via JS) -->
-  <section id="uploadSection">
-    <h1>Envio de Arquivo(s) PDF</h1>
-    <br />
-    <form id="uploadForm">
-      <label for="fileInput">Selecione ou arraste os arquivos PDF:</label>
-      <div id="dropArea">
-        <input type="file" id="fileInput" accept="application/pdf" multiple required />
-        <p>Arraste e solte aqui ou clique para escolher</p>
-      </div>
-      <br />
-      <button type="submit">Enviar</button>
-      <progress id="uploadProgress" max="100" value="0" style="display: none; width: 100%;"></progress>
-    </form>
-    <div id="statusMessage" class="alert"></div>
-  </section>
+  <script type="module">
+    function renderRandomMascote({
+      containerSelector = "#mascoteContainer",
+      imageFolder = "../../images/logos",
+      imagePrefix = "logo_",
+      maxIndex = 3,
+      altText = "Mascote ClassHero"
+    } = {}) {
+      const container = document.querySelector(containerSelector);
+      if (!container) return;
 
-  <script src="script.js"></script>
+      const randomIndex = Math.floor(Math.random() * maxIndex) + 1;
+      const paddedIndex = String(randomIndex).padStart(3, '0');
+      const imgPath = `${imageFolder}/${imagePrefix}${paddedIndex}.png`;
+
+      const img = document.createElement("img");
+      img.src = imgPath;
+      img.alt = altText;
+      img.className = "scale-[0.75] object-contain";
+
+      container.innerHTML = "";
+      container.appendChild(img);
+    }
+
+    // Executa após o DOM estar carregado
+    window.addEventListener("DOMContentLoaded", () => {
+      renderRandomMascote();
+
+      // Aplica tema salvo no localStorage
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        document.getElementById("toggleTheme").textContent = "☀️";
+      }
+
+      // Alternância de tema
+      const toggleTheme = document.getElementById("toggleTheme");
+      toggleTheme.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark");
+        toggleTheme.textContent = isDark ? "☀️" : "🌙";
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      });
+
+      // Alternância de sidebar
+      const toggleMenu = document.getElementById("menuToggle");
+      const menuIcon = document.getElementById("menuIcon");
+
+      toggleMenu.addEventListener("click", () => {
+        document.body.classList.toggle("menu-collapsed");
+        const collapsed = document.body.classList.contains("menu-collapsed");
+        menuIcon.textContent = collapsed ? "📂" : "📁";
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
-import { renderRandomImage } from "../../shared/randomImage.js";
+import { renderRandomLogo } from "../../shared/js/random_logo.js";
 
-renderRandomImage({
-  containerSelector: ".content",
-  imageFolder: "images/logos",
+renderRandomLogo({
+  containerSelector: ".mascote_container",
+  imageFolder: "../../images/logos",
   imagePrefix: "logo_",
   className: "logo-img",
   altText: "Logo Aleatória ClassHero"
