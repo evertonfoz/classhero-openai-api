@@ -6,6 +6,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copia os arquivos do frontend para o Nginx
 COPY frontend/ /usr/share/nginx/html/
+COPY ./frontend-infra/nginx/classhero.conf /etc/nginx/nginx.conf
 
 # Expondo a porta padrão do Nginx
 EXPOSE 80

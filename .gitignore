@@ -1,2 +1,3 @@
 credentials
 /backend/.env
+**/node_modules

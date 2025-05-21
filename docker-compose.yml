@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   frontend:
     container_name: classhero-frontend
@@ -10,6 +8,8 @@ services:
       - "8080:80"
     volumes:
       - ./frontend:/usr/share/nginx/html
+    networks:
+      - app_net
 
   backend:
     container_name: classhero-backend
@@ -24,4 +24,23 @@ services:
       - "3000:3000"
     env_file:
       - ./backend/.env
-    command: sleep infinity  # 👈 Evita crash antes do nodemon estar disponível
+    command: sleep infinity
+    networks:
+      - app_net
+
+  proxy:
+    container_name: classhero-proxy
+    build:
+      context: .
+      dockerfile: ./frontend-infra/nginx/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge

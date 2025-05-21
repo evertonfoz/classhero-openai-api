@@ -68,7 +68,8 @@ verifyForm.addEventListener("submit", async (e) => {
 
     if (response.ok) {
       statusMessage.textContent = "Login bem-sucedido!";
-      window.location.href = "/frontend/features/dashboard/dashboard.html";
+      window.location.href = `../dashboard/dashboard.html`;
+
     } else {
       statusMessage.textContent = "Código inválido ou expirado.";
     }
