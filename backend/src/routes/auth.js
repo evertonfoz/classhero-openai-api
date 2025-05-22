@@ -43,6 +43,10 @@ router.post('/verify-code', async (req, res) => {
     if (!signInWasOk) {
       return res.status(401).json({ error: 'Erro ao fazer login.' });
     }
+    return res.json({
+      access_token: signInWasOk.session.access_token,
+      refresh_token: signInWasOk.session.refresh_token
+    });
   } else {
       const signUpWasOk = await supabaseSignUp(email);
       if (!signUpWasOk) {
@@ -54,7 +58,6 @@ router.post('/verify-code', async (req, res) => {
       });
 
   }
-  // return res.json({ message: 'Acesso bem-sucedido!' });
 });
 
 export default router;

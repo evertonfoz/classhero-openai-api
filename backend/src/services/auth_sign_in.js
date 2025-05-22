@@ -13,5 +13,5 @@ export async function supabaseSignIn(email) {
       return false;
     }
 
-    return true;
+    return data;
 }
