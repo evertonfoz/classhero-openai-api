@@ -1,4 +1,5 @@
 import { renderRandomLogo } from "../../shared/js/random_logo.js";
+import { createSupabaseClient } from "../../config/supabase_client.js";
 
 renderRandomLogo();
 
@@ -8,6 +9,14 @@ const statusMessage = document.getElementById("statusMessage");
 const emailInput = document.getElementById("emailInput");
 const codeInput = document.getElementById("codeInput");
 const loginButton = loginForm.querySelector("button[type='submit']");
+
+const supabase = createSupabaseClient();
+
+const { data, error } = await supabase.auth.getSession();
+
+if (data.session) {
+  window.location.href = `../dashboard/dashboard.html`;
+}
 
 // Foco no campo de e-mail ao carregar a página
 window.addEventListener("DOMContentLoaded", () => {
@@ -81,6 +90,13 @@ verifyForm.addEventListener("submit", async (e) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, code }),
+    });
+
+    const result = await response.json();
+
+    await supabase.auth.setSession({
+      access_token: result.access_token,
+      refresh_token: result.refresh_token
     });
 
     if (response.ok) {

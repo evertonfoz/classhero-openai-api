@@ -1,14 +1,9 @@
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClient } from '../config/supabase_client.js';
+import { validateOtp } from '../services/auth_validate_otp.js';
+import { supabaseSignIn } from '../services/auth_sign_in.js';
+import { supabaseSignUp } from '../services/auth_sign_up.js';
 import { sendOtpEmail } from '../services/email_service.js';
-import dotenv from 'dotenv';
-
-dotenv.config(); // para carregar as variáveis de ambiente
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
 
 const router = express.Router();
 
@@ -17,6 +12,8 @@ router.post('/send-code', async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   try {
+    const supabase = createSupabaseClient();
+
     await supabase.from('otps').delete().eq('email', email);
 
     const { error } = await supabase
@@ -40,25 +37,24 @@ router.post('/send-code', async (req, res) => {
 
 router.post('/verify-code', async (req, res) => {
   const { email, code } = req.body;
-
-  try {
-    const { data, error } = await supabase
-      .from('otps')
-      .select('*')
-      .eq('email', email)
-      .eq('otp_code', code)
-      .maybeSingle();
-
-    if (error || !data) {
-      return res.status(401).json({ error: 'Código inválido ou expirado.' });
+  const userId = await validateOtp(email, code);
+  if (userId) {
+    const signInWasOk = await supabaseSignIn(email);
+    if (!signInWasOk) {
+      return res.status(401).json({ error: 'Erro ao fazer login.' });
     }
+  } else {
+      const signUpWasOk = await supabaseSignUp(email);
+      if (!signUpWasOk) {
+        return res.status(401).json({ error: 'Erro ao registrar usuário.' });
+      }
+      return res.json({
+        access_token: signUpWasOk.session.access_token,
+        refresh_token: signUpWasOk.session.refresh_token
+      });
 
-    return res.json({ message: 'Login bem-sucedido!' });
-
-  } catch (err) {
-    console.error('Erro ao verificar código:', err.message);
-    return res.status(500).json({ error: 'Erro interno ao verificar o código.' });
   }
+  // return res.json({ message: 'Acesso bem-sucedido!' });
 });
 
 export default router;
