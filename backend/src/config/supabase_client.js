@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
 export function createSupabaseClient () {
-  dotenv.config(); // carrega variáveis de ambiente do .env
+    dotenv.config(); // carrega variáveis de ambiente do .env
 
     const supabase = createClient(
         process.env.SUPABASE_URL,
@@ -18,4 +18,4 @@ export function createSupabaseClient () {
     );
 
     return supabase;
-}
+    }

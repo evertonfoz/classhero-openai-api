@@ -5,21 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carregando... - ClassHero</title>
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#27ae60',
+            // Sugestão: Manter a paleta de cores customizadas no tailwind.config é uma boa prática.
+            primary: '#27ae60', 
           }
         }
       }
     }
   </script>
 
-  <!-- Mascote aleatório -->
   <script type="module">
     import { renderRandomLogo } from "./shared/js/random_logo.js";
     renderRandomLogo({
@@ -28,6 +27,10 @@
   </script>
 
   <script>
+    // Comentário: Este script aguarda o carregamento completo da página (window.onload)
+    // e então, após 5 segundos (5000 milissegundos), redireciona o usuário para a página de login.
+    // Sugestão: 5 segundos pode ser um tempo longo dependendo do contexto. 
+    // Considere reduzir para 2-3 segundos ou usar um tempo mais dinâmico se houver uma real "preparação" a ser feita (ex: carregamento de dados).
     window.onload = () => {
       setTimeout(() => {
         window.location.href = "./features/login/login.html";
@@ -38,8 +41,7 @@
 <body class="bg-gray-50 min-h-screen flex items-center justify-center">
   <div class="flex flex-col items-center justify-center animate-fade-in space-y-6">
     <div class="mascote_container animate-pulse">
-      <!-- Imagem inserida dinamicamente -->
-    </div>
+      </div>
     <p class="text-primary font-semibold text-lg">Preparando sua experiência de aprendizado...</p>
   </div>
 

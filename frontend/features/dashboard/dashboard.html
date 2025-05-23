@@ -18,6 +18,7 @@
     };
   </script>
   <style>
+    /* Estilos para o menu colapsado */
     body.menu-collapsed .sidebar {
       width: 60px;
     }
@@ -29,42 +30,204 @@
     body.menu-collapsed .sidebar .label {
       display: none;
     }
+
+    /* Ajustes para a sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* Empurra o último item para o final */
+      padding-bottom: 2rem; /* Adiciona um padding na parte inferior */
+      align-items: center; /* Centraliza horizontalmente todos os conteúdos diretos da sidebar */
+    }
+
+    /* Container para os itens do topo da sidebar */
+    .sidebar-top-items {
+      width: 100%; /* Garante que o UL ocupe a largura total para centralização */
+      padding-top: 4rem; /* Espaço para o botão de toggle */
+      display: flex; /* Transforma em flex container */
+      flex-direction: column; /* Itens em coluna */
+      align-items: center; /* Centraliza os itens dentro desta UL */
+      gap: 1.5rem; /* Espaço entre os itens do topo (equivalente a space-y-6) */
+    }
+
+    /* Container para o botão de Logout na base */
+    .logout-item {
+      width: 100%; /* Garante que o UL ocupe a largura total para centralização */
+      display: flex; /* Transforma em flex container */
+      flex-direction: column; /* Itens em coluna */
+      align-items: center; /* Centraliza o botão dentro desta UL */
+    }
+
+    /* Ajuste para garantir que os botões dentro das ULs também centralizem seu conteúdo */
+    .sidebar-top-items li,
+    .logout-item li {
+      width: 100%; /* Garante que o li ocupe a largura total do ul */
+      display: flex;
+      justify-content: center; /* Centraliza horizontalmente o botão dentro do li */
+    }
+
+    /* Garante o cursor de mão para todos os botões */
+    /* Aplicado a todos os elementos button para máxima abrangência */
+    button {
+      cursor: pointer !important; /* Aplica o cursor de mão a todos os botões com alta prioridade */
+    }
+
+    /* Efeito de aumento do ícone ao passar o mouse sobre os botões da sidebar */
+    .sidebar-top-items button .icon,
+    .logout-item button .icon {
+      transition: transform 0.2s ease-in-out; /* Adiciona uma transição suave para o efeito de escala */
+    }
+
+    .sidebar-top-items button:hover .icon,
+    .logout-item button:hover .icon {
+      transform: scale(1.2); /* Aumenta o ícone em 20% */
+    }
+
+    /* Efeito de aumento do ícone para o botão de menuToggle */
+    #menuToggle span { /* Alvo é o span que contém o ícone dentro do menuToggle */
+      transition: transform 0.2s ease-in-out;
+      display: inline-block; /* Necessário para que a transformação de escala funcione corretamente em spans */
+    }
+
+    #menuToggle:hover span {
+      transform: scale(1.2);
+    }
+
+    /* Efeito de aumento do ícone para o botão de toggleTheme */
+    #toggleTheme { /* O ícone é o próprio texto do botão, então aplicamos a ele */
+      transition: transform 0.2s ease-in-out;
+      display: inline-block; /* Necessário para que a transformação de escala funcione corretamente */
+    }
+
+    #toggleTheme:hover {
+      transform: scale(1.2);
+    }
+
+    /* Estilos para o modal de confirmação */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* Garante que o modal fique acima de tudo */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.75rem; /* rounded-lg */
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+      text-align: center;
+      max-width: 400px;
+      width: 90%; /* Responsivo */
+      transform: translateY(-20px); /* Efeito de entrada */
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1.5rem;
+      gap: 1rem; /* Espaçamento entre os botões */
+    }
+
+    .modal-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem; /* rounded-md */
+      font-weight: 600; /* font-semibold */
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .modal-buttons .btn-confirm {
+      background-color: #ef4444; /* red-500 */
+      color: white;
+    }
+
+    .modal-buttons .btn-confirm:hover {
+      background-color: #dc2626; /* red-600 */
+    }
+
+    .modal-buttons .btn-cancel {
+      background-color: #e5e7eb; /* gray-200 */
+      color: #374151; /* gray-700 */
+    }
+
+    .modal-buttons .btn-cancel:hover {
+      background-color: #d1d5db; /* gray-300 */
+    }
   </style>
 </head>
 
 <body class="menu-collapsed">
-  <!-- Botão de colapso do menu -->
   <div class="fixed top-4 left-4 z-50">
-    <button id="menuToggle" class="text-2xl bg-transparent border-none cursor-pointer">
+    <button id="menuToggle" class="text-2xl bg-transparent border-none">
       <span id="menuIcon">📂</span>
     </button>
   </div>
 
-  <!-- Botão de alternância de tema -->
   <button id="toggleTheme"
-    class="fixed top-4 right-4 text-2xl bg-transparent border-none cursor-pointer z-50">
+    class="fixed top-4 right-4 text-2xl bg-transparent border-none z-50">
     🌙
   </button>
 
-  <!-- Sidebar -->
-  <aside class="sidebar fixed top-0 left-0 h-screen w-[200px] bg-gray-800 text-white flex flex-col items-center pt-16 transition-all duration-300 shadow-lg z-10">
-    <ul class="space-y-6">
+  <aside class="sidebar fixed top-0 left-0 h-screen w-[200px] bg-gray-800 text-white shadow-lg z-10 transition-all duration-300">
+    <ul class="sidebar-top-items">
       <li>
         <button class="text-white text-lg font-semibold hover:text-primary transition-colors flex flex-col items-center">
           <span class="icon text-2xl">📤</span>
           <span class="label text-sm mt-1">Upload</span>
         </button>
       </li>
+      </ul>
+
+    <ul class="logout-item">
+      <li>
+        <button id="logoutButton" class="text-white text-lg font-semibold hover:text-primary transition-colors flex flex-col items-center">
+          <span class="icon text-2xl">🚪</span> <span class="label text-sm mt-1">Logout</span>
+        </button>
+      </li>
     </ul>
   </aside>
 
-  <!-- Conteúdo principal -->
   <main id="mascoteContainer" class="main-content ml-[200px] min-h-screen flex items-center justify-center transition-all duration-300 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
 
-    <!-- Mascote será inserida aqui -->
-  </main>
+    </main>
+
+  <div id="logoutConfirmModal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-700">Confirmar Saída</h2>
+      <p class="text-gray-700 dark:text-gray-600">Tem certeza que deseja sair da sua conta?</p>
+      <div class="modal-buttons">
+        <button id="confirmLogoutYes" class="btn-confirm">Sim, Sair</button>
+        <button id="confirmLogoutNo" class="btn-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
+     import { createSupabaseClient } from "../../config/supabase_client.js";
+
+    // Inicializa o cliente Supabase
+    const supabase = createSupabaseClient();
+
+
     function renderRandomMascote({
       containerSelector = "#mascoteContainer",
       imageFolder = "../../images/logos",
@@ -116,6 +279,50 @@
         const collapsed = document.body.classList.contains("menu-collapsed");
         menuIcon.textContent = collapsed ? "📂" : "📁";
       });
+
+      // Lógica do Modal de Confirmação de Logout
+      const logoutButton = document.getElementById("logoutButton");
+      const logoutConfirmModal = document.getElementById("logoutConfirmModal");
+      const confirmLogoutYes = document.getElementById("confirmLogoutYes");
+      const confirmLogoutNo = document.getElementById("confirmLogoutNo");
+
+      if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
+          // Exibe o modal de confirmação
+          logoutConfirmModal.classList.add("show");
+        });
+      }
+
+      // Listener para o botão "Sim, Sair" do modal
+      if (confirmLogoutYes) {
+        confirmLogoutYes.addEventListener("click", async () => {
+          try {
+            const { error } = await supabase.auth.signOut();
+
+            if (error) {
+              console.error("Erro ao fazer logout:", error.message);
+              // Lidar com o erro, talvez mostrar uma mensagem para o usuário
+            } else {
+              console.log("Logout realizado com sucesso!");
+              // Redireciona para a página de login após o logout
+              window.location.href = `../login/login.html`;
+            }
+          } catch (err) {
+            console.error("Erro inesperado durante o logout:", err);
+          } finally {
+            // Oculta o modal após a tentativa de logout (sucesso ou falha)
+            logoutConfirmModal.classList.remove("show");
+          }
+        });
+      }
+
+      // Listener para o botão "Cancelar" do modal
+      if (confirmLogoutNo) {
+        confirmLogoutNo.addEventListener("click", () => {
+          // Apenas oculta o modal
+          logoutConfirmModal.classList.remove("show");
+        });
+      }
     });
   </script>
 </body>
