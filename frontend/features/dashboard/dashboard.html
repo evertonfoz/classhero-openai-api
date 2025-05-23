@@ -190,12 +190,18 @@
   <aside class="sidebar fixed top-0 left-0 h-screen w-[200px] bg-gray-800 text-white shadow-lg z-10 transition-all duration-300">
     <ul class="sidebar-top-items">
       <li>
+        <button id="usersButton" class="text-white text-lg font-semibold hover:text-primary transition-colors flex flex-col items-center">
+          <span class="icon text-2xl">👥</span>
+          <span class="label text-sm mt-1">Usuários</span>
+        </button>
+      </li>
+       <li>
         <button class="text-white text-lg font-semibold hover:text-primary transition-colors flex flex-col items-center">
           <span class="icon text-2xl">📤</span>
           <span class="label text-sm mt-1">Upload</span>
         </button>
       </li>
-      </ul>
+    </ul>
 
     <ul class="logout-item">
       <li>
@@ -206,9 +212,8 @@
     </ul>
   </aside>
 
-  <main id="mascoteContainer" class="main-content ml-[200px] min-h-screen flex items-center justify-center transition-all duration-300 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
-
-    </main>
+  <main id="mainContent" class="main-content ml-[200px] min-h-screen flex items-center justify-center transition-all duration-300 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+  </main>
 
   <div id="logoutConfirmModal" class="modal-overlay">
     <div class="modal-content">
@@ -227,32 +232,59 @@
     // Inicializa o cliente Supabase
     const supabase = createSupabaseClient();
 
+    // Get the main content area once
+    const mainContentArea = document.getElementById("mainContent");
 
-    function renderRandomMascote({
-      containerSelector = "#mascoteContainer",
-      imageFolder = "../../images/logos",
-      imagePrefix = "logo_",
-      maxIndex = 3,
-      altText = "Mascote ClassHero"
-    } = {}) {
-      const container = document.querySelector(containerSelector);
-      if (!container) return;
+    // Function to load content dynamically into the mainContentArea
+    async function loadContent(url) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const html = await response.text();
+        mainContentArea.innerHTML = html;
 
-      const randomIndex = Math.floor(Math.random() * maxIndex) + 1;
-      const paddedIndex = String(randomIndex).padStart(3, '0');
-      const imgPath = `${imageFolder}/${imagePrefix}${paddedIndex}.png`;
+        // Executa JS adicional manualmente, baseado no HTML carregado
+        if (url.includes("users_list.html")) {
+          const mainContent = document.getElementById("mainContent");
+          mainContent.classList.remove("flex", "items-center", "justify-center");
+          mainContent.classList.add("p-6");
 
-      const img = document.createElement("img");
-      img.src = imgPath;
-      img.alt = altText;
-      img.className = "scale-[0.75] object-contain";
+          // Executa o script da tabela
+          const script = document.createElement("script");
+          script.type = "module";
+          script.src = "../users/users_list.js";
+          document.body.appendChild(script);
+        }
 
-      container.innerHTML = "";
-      container.appendChild(img);
+
+      } catch (error) {
+        console.error("Erro ao carregar conteúdo:", error);
+        mainContentArea.innerHTML = `<p class="text-red-500 dark:text-red-400 p-6">Erro ao carregar o conteúdo.</p>`;
+      }
     }
+
+
+    function renderRandomMascote() {
+      if (!mainContentArea) return;
+
+      const mascot = document.createElement("img");
+      mascot.src = `../../images/logos/logo_001.png`;
+      mascot.alt = "Mascote";
+      mascot.className = "scale-[0.75] object-contain";
+
+      // Restaura layout centralizado
+      mainContentArea.classList.remove("p-6");
+      mainContentArea.classList.add("flex", "items-center", "justify-center");
+
+      mainContentArea.innerHTML = "";
+      mainContentArea.appendChild(mascot);
+    }
+
 
     // Executa após o DOM estar carregado
     window.addEventListener("DOMContentLoaded", () => {
+      // Render the mascot initially when the page loads
       renderRandomMascote();
 
       // Aplica tema salvo no localStorage
@@ -279,6 +311,15 @@
         const collapsed = document.body.classList.contains("menu-collapsed");
         menuIcon.textContent = collapsed ? "📂" : "📁";
       });
+
+      // --- NEW FEATURE: Load Users Content ---
+      const usersButton = document.getElementById("usersButton");
+      if (usersButton) {
+        usersButton.addEventListener("click", () => {
+          loadContent("../users/users_list.html"); // Path to your new content file
+        });
+      }
+      // --- END NEW FEATURE ---
 
       // Lógica do Modal de Confirmação de Logout
       const logoutButton = document.getElementById("logoutButton");
